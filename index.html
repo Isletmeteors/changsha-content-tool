@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>长沙小红书文案助手</title>
+    <!-- 引入手写字体，营造茶颜悦色风格 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ========== 新增：顶部标题栏（茶颜悦色风格） ========== */
+        .top-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .top-header .main-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #5C3A21;
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(92, 58, 33, 0.1);
+        }
+
+        .top-header .sub-title {
+            font-family: 'ZCOOL XiaoWei', serif;
+            color: #8B6914;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 新增：使用次数统计 ========== */
+        .usage-counter {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 25px;
+            display: inline-block;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 10px rgba(92, 58, 33, 0.05);
+        }
+
+        .usage-counter span {
+            color: #C24840;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .usage-counter p {
+            color: #5C3A21;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(92, 58, 33, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #5C3A21;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #E8D5C4;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #5C3A21;
+            background: #FAF5EF;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            min-height: 48px;
+        }
+
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #C24840;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(194, 72, 64, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        /* ========== 优化：移动端按钮更大 ========== */
+        .btn-generate {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #C24840 0%, #A63830 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(194, 72, 64, 0.3);
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(194, 72, 64, 0.4);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            margin-top: 35px;
+        }
+
+        .output-section h2 {
+            color: #5C3A21;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'ZCOOL XiaoWei', serif;
+        }
+
+        .result-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 20px rgba(92, 58, 33, 0.08);
+            border-left: 4px solid #C24840;
+        }
+
+        .result-card:nth-child(2) {
+            border-left-color: #8B6914;
+        }
+
+        .result-card:nth-child(3) {
+            border-left-color: #5C3A21;
+        }
+
+        .result-card .copy-btn {
+            float: right;
+            padding: 8px 16px;
+            background: #F5E6D3;
+            color: #5C3A21;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+        }
+
+        .result-card .copy-btn:hover {
+            background: #C24840;
+            color: #FFFFFF;
+        }
+
+        .result-card .copy-btn.copied {
+            background: #4CAF50;
+            color: #FFFFFF;
+        }
+
+        .result-card h3 {
+            color: #5C3A21;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            padding-right: 70px;
+        }
+
+        .result-card .content {
+            color: #5C3A21;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 18px;
+            white-space: pre-wrap;
+        }
+
+        .result-card .tags {
+            margin-bottom: 14px;
+        }
+
+        .result-card .tags span {
+            display: inline-block;
+            background: #F5E6D3;
+            color: #5C3A21;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .result-card .poi {
+            background: #FFF5F5;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #C24840;
+        }
+
+        .result-card .poi span {
+            color: #C24840;
+            font-weight: 600;
+        }
+
+        .result-card .poi p {
+            color: #5C3A21;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* ========== 新增：底部推广卡片 ========== */
+        .cta-card {
+            margin-top: 25px;
+            padding: 22px 25px;
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFF5E8 100%);
+            border: 2px dashed #C24840;
+            border-radius: 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 40px;
+            height: 40px;
+            background: #C24840;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .cta-card::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 60px;
+            height: 60px;
+            background: #8B6914;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .cta-card .cta-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .cta-card .cta-text {
+            color: #5C3A21;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .cta-card .cta-text .highlight {
+            color: #C24840;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* ========== 优化：移动端显示 ========== */
+        @media (max-width: 600px) {
+            html {
+                font-size: 15px;
+            }
+
+            body {
+                padding: 15px;
+                padding-top: 20px;
+            }
+
+            .top-header {
+                padding: 15px 10px;
+                margin-bottom: 20px;
+            }
+
+            .top-header .main-title {
+                font-size: 2rem;
+            }
+
+            .top-header .sub-title {
+                font-size: 1rem;
+            }
+
+            .usage-counter {
+                padding: 10px 16px;
+                margin-bottom: 20px;
+            }
+
+            .usage-counter p {
+                font-size: 0.85rem;
+            }
+
+            .card {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .input-group {
+                margin-bottom: 20px;
+            }
+
+            .input-group label {
+                font-size: 0.95rem;
+            }
+
+            .input-group select,
+            .input-group textarea {
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+
+            .btn-generate {
+                padding: 22px;
+                font-size: 1.25rem;
+                border-radius: 16px;
+            }
+
+            .result-card {
+                padding: 18px;
+                margin-bottom: 16px;
+            }
+
+            .result-card h3 {
+                font-size: 1rem;
+                padding-right: 60px;
+            }
+
+            .result-card .content {
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+
+            .result-card .copy-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .cta-card {
+                padding: 20px 18px;
+                margin-top: 20px;
+            }
+
+            .cta-card .cta-text {
+                font-size: 0.95rem;
+            }
+
+            .cta-card .cta-text .highlight {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .top-header .main-title {
+                font-size: 1.8rem;
+            }
+
+            .btn-generate {
+                padding: 24px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ========== 新增：顶部标题栏 ========== -->
+        <div class="top-header">
+            <h1 class="main-title">长沙小红书文案助手</h1>
+            <p class="sub-title">专做长沙味道的文案 · 不是AI瞎编的</p>
+        </div>
+
+        <!-- ========== 新增：使用次数统计 ========== -->
+        <div class="usage-counter">
+            <p>今日已有 <span id="usageCount">36</span> 位长沙老板使用</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="category">店铺品类</label>
+                <select id="category">
+                    <option value="米粉">米粉</option>
+                    <option value="茶饮">茶饮</option>
+                    <option value="小吃">小吃</option>
+                    <option value="正餐">正餐</option>
+                    <option value="夜宵">夜宵</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="feature">店铺特色</label>
+                <textarea id="feature" placeholder="比如：手工现做、百年老店、正宗长沙味、环境雅致、性价比高..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="style">文案风格</label>
+                <select id="style">
+                    <option value="接地气">接地气</option>
+                    <option value="精致">精致</option>
+                    <option value="幽默">幽默</option>
+                </select>
+            </div>
+
+            <button class="btn-generate" onclick="generateCopy()">✨ 生成文案</button>
+        </div>
+
+        <div class="output-section" id="outputSection" style="display: none;">
+            <h2>📝 生成结果</h2>
+            <div id="resultContainer"></div>
+            
+            <!-- ========== 新增：底部推广卡片 ========== -->
+            <div class="cta-card">
+                <span class="cta-icon">📱</span>
+                <p class="cta-text">想要更懂你店铺的专属文案？<br>加微信：<span class="highlight">LxiangY061111</span>，前10个商家免费帮你写3条，不满意不要钱。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 新增：页面加载时随机生成使用次数（20-80） ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            const usageCount = document.getElementById('usageCount');
+            const randomNum = Math.floor(Math.random() * 61) + 20;
+            usageCount.textContent = randomNum;
+        });
+
+        const templates = {
+            米粉: {
+                接地气: [
+                    "长沙伢子都晓得，嗦粉是每天的头等大事！这家店的粉真的韵味，{feature}，码子盖得满满一层，汤头是骨汤熬了十几个小时的，鲜得舌头都要吞下去。早上来一碗，精神一整天！\n\n来都来了，必须搞一碗试一哈！",
+                    "找到了！长沙真正的宝藏米粉店！{feature}，粉是手工现做的，滑溜溜的，牛肉码子炖得软烂入味，一口下去，辣得过瘾，鲜得满足！这才是长沙米粉该有的味道！\n\n住在附近的人有福了，天天都能嗦到这么正的粉！",
+                    "嗦粉不咯？这家店我可以天天来！{feature}，汤头浓郁，码子新鲜，粉的口感绝了！配上酸豆角和剁辣椒，那叫一个韵味！来长沙玩的朋友一定要来试！"
+                ],
+                精致: [
+                    "在长沙的清晨，寻一处静谧，品味一碗地道米粉。{feature}，手工现磨的米粉，细腻爽滑，慢火熬制的骨汤，香气袅袅。每一口都是对味蕾的温柔款待，这是属于长沙的优雅早餐时光。\n\n生活需要仪式感，从一碗精致的米粉开始。",
+                    "藏在巷子里的米粉美学。{feature}，简约的环境，却有着不简单的味道。新鲜的食材，精心的配比，让一碗米粉成为艺术品。在喧嚣的城市中，这里是一处让人静心的角落。\n\n品味生活，从一碗好粉开始。",
+                    "长沙米粉的高级打开方式。{feature}，选用上等原料，匠心制作，让传统美食焕发新的光彩。每一碗都是主厨的心血之作，值得细细品味。\n\n在长沙，遇见一碗有灵魂的米粉。"
+                ],
+                幽默: [
+                    "警告！这家米粉店有毒！吃了会上瘾！{feature}，粉太好吃了，我已经连续吃了三天了，再这样下去我要变成米粉精了！老板，你赔我的减肥计划！\n\n长沙人嗦粉的快乐，你想象不到！",
+                    "听说这家米粉店的老板是个狠人，{feature}，粉做得太绝了！我本来只想吃一碗，结果连汤都喝光了！现在肚子圆滚滚的，但是一点都不后悔！\n\n来长沙不吃这家粉，等于白来！",
+                    "救命！这家米粉店让我爱上了上班！因为上班路上可以顺道嗦一碗！{feature}，太好吃了，每天早上都迫不及待想来！老板，能不能开个分店到我家楼下？"
+                ]
+            },
+            茶饮: {
+                接地气: [
+                    "长沙的夏天，全靠这杯茶续命！{feature}，茶底新鲜，甜度刚刚好，喝一口透心凉！朋友聚会、逛街累了，来一杯，舒服！\n\n长沙人夏天的快乐，就是这么简单！",
+                    "找到了！长沙最好喝的奶茶！{feature}，奶味香浓，茶味清新，喝一口就上头！我已经安利给身边所有朋友了，个个都说好喝！\n\n来长沙玩的朋友，一定要试试！",
+                    "这杯茶我可以喝一辈子！{feature}，性价比超高，味道绝了！每天一杯，快乐加倍！老板太懂长沙人的口味了！"
+                ],
+                精致: [
+                    "在长沙的午后，邂逅一杯诗意的茶。{feature}，精选上等茶叶，匠心调配，每一口都是味蕾的享受。简约的包装，优雅的口感，让喝茶成为一种艺术。\n\n生活需要一点甜，从一杯精致的茶饮开始。",
+                    "长沙茶饮界的颜值担当。{feature}，清新的配色，精致的工艺，每一杯都像是一件艺术品。茶的清香与奶的醇厚完美融合，带来极致的味觉体验。\n\n在繁忙的都市中，给自己一杯茶的时间。",
+                    "品味长沙的茶香。{feature}，坚持手工制作，追求品质与口感的完美平衡。每一杯茶都承载着匠人的心意，值得细细品味。\n\n在长沙，遇见一杯有温度的茶。"
+                ],
+                幽默: [
+                    "这家奶茶店的老板是不是会魔法？{feature}，奶茶做得也太好喝了吧！我已经喝了五杯了，现在感觉自己飘飘欲仙！老板，求你别再做这么好喝了，我钱包受不了！\n\n长沙人对奶茶的执念，你不懂！",
+                    "警告！这家店的奶茶有毒！{feature}，喝了会让人疯狂！我本来只想买一杯，结果买了三杯！现在我的减肥计划彻底泡汤了！\n\n来长沙不喝这家奶茶，等于白来！",
+                    "救命！这家奶茶店让我不想回家了！{feature}，太好喝了，我想住在店里！老板，能不能给我办个无限续杯卡？"
+                ]
+            },
+            小吃: {
+                接地气: [
+                    "长沙的小吃，就是韵味！这家店的{feature}，味道绝了！外酥里嫩，一口下去，香气扑鼻！逛太平街、坡子街的时候，一定要来尝一尝！\n\n长沙人的快乐，就是这么简单！",
+                    "找到了！长沙最好吃的小吃！{feature}，价格实惠，味道正宗！我每次来都要打包带走，家里人都说好吃！\n\n来长沙玩的朋友，一定要试试！",
+                    "这家小吃店我可以天天来！{feature}，每样都好吃，性价比超高！老板太懂长沙人的口味了！"
+                ],
+                精致: [
+                    "长沙小吃的精致美学。{feature}，传统工艺与现代美学的完美结合，让小吃成为艺术品。每一口都是对传统美食的致敬，值得细细品味。\n\n在长沙，遇见不一样的小吃体验。",
+                    "藏在巷子里的味觉惊喜。{feature}，简约的环境，却有着不简单的味道。新鲜的食材，精心的制作，让每一份小吃都充满诚意。\n\n品味生活，从一份精致的小吃开始。",
+                    "长沙小吃的高级打开方式。{feature}，选用上等原料，匠心制作，让传统小吃焕发新的光彩。每一份都是主厨的心血之作，值得细细品味。"
+                ],
+                幽默: [
+                    "警告！这家小吃店有毒！{feature}，太好吃了，我已经吃了十份了！再这样下去我要变成小吃精了！老板，你赔我的减肥计划！\n\n长沙人吃小吃的快乐，你想象不到！",
+                    "听说这家小吃店的老板是个狠人，{feature}，东西做得太绝了！我本来只想吃一份，结果吃了三份！现在肚子圆滚滚的，但是一点都不后悔！\n\n来长沙不吃这家小吃，等于白来！",
+                    "救命！这家小吃店让我爱上了逛街！因为逛街可以顺道吃小吃！{feature}，太好吃了，每天都迫不及待想来！老板，能不能开个分店到我家楼下？"
+                ]
+            },
+            正餐: {
+                接地气: [
+                    "长沙伢子都晓得，恰饭就要恰这种韵味的！{feature}，菜的味道绝了，分量足，价格实惠！一家人来吃，热热闹闹，舒服！\n\n长沙人的幸福，就是这么简单！",
+                    "找到了！长沙真正的宝藏餐厅！{feature}，每道菜都是经典，味道正宗，服务热情！我已经安利给身边所有朋友了，个个都说好吃！\n\n来长沙玩的朋友，一定要来试！",
+                    "这家餐厅我可以天天来！{feature}，性价比超高，味道绝了！老板太懂长沙人的口味了！"
+                ],
+                精致: [
+                    "在长沙的夜晚，品味一桌地道湘菜。{feature}，精致的摆盘，正宗的味道，让用餐成为一种享受。每一道菜都是对味蕾的温柔款待，这是属于长沙的美食盛宴。\n\n生活需要仪式感，从一顿精致的正餐开始。",
+                    "长沙餐饮界的品质担当。{feature}，优雅的环境，精致的菜品，让用餐成为一种艺术。新鲜的食材，匠心的烹饪，带来极致的味觉体验。\n\n在繁忙的都市中，给自己一顿好饭的时间。",
+                    "品味长沙的湘菜美学。{feature}，坚持传统工艺，追求品质与口感的完美平衡。每一道菜都承载着匠人的心意，值得细细品味。\n\n在长沙，遇见一桌有灵魂的湘菜。"
+                ],
+                幽默: [
+                    "警告！这家餐厅有毒！{feature}，菜太好吃了，我已经吃了三碗饭了！再这样下去我要变成饭桶了！老板，你赔我的减肥计划！\n\n长沙人恰饭的快乐，你想象不到！",
+                    "听说这家餐厅的老板是个狠人，{feature}，菜做得太绝了！我本来只想吃一碗饭，结果吃了三碗！现在肚子圆滚滚的，但是一点都不后悔！\n\n来长沙不吃这家餐厅，等于白来！",
+                    "救命！这家餐厅让我爱上了下班！因为下班可以来恰饭！{feature}，太好吃了，每天都迫不及待想来！老板，能不能开个分店到我公司楼下？"
+                ]
+            },
+            夜宵: {
+                接地气: [
+                    "长沙的夜生活，就是韵味！这家夜宵店{feature}，味道绝了！晚上约上几个朋友，来这里喝点小酒，吃点夜宵，舒服！\n\n长沙人的夜生活，就是这么精彩！",
+                    "找到了！长沙最好吃的夜宵！{feature}，价格实惠，味道正宗！我每次来都要吃到撑！\n\n来长沙玩的朋友，一定要试试！",
+                    "这家夜宵店我可以天天来！{feature}，每样都好吃，性价比超高！老板太懂长沙人的口味了！"
+                ],
+                精致: [
+                    "在长沙的深夜，邂逅一场味觉盛宴。{feature}，精致的环境，地道的夜宵，让夜晚变得有滋有味。每一道菜都是对味蕾的温柔款待，这是属于长沙的深夜食堂。\n\n生活需要一点烟火气，从一顿精致的夜宵开始。",
+                    "长沙夜宵界的品质担当。{feature}，优雅的环境，精致的菜品，让夜宵成为一种艺术。新鲜的食材，匠心的烹饪，带来极致的味觉体验。\n\n在繁忙的都市中，给自己一顿夜宵的时间。",
+                    "品味长沙的夜宵美学。{feature}，坚持传统工艺，追求品质与口感的完美平衡。每一道菜都承载着匠人的心意，值得细细品味。\n\n在长沙，遇见一场有温度的夜宵。"
+                ],
+                幽默: [
+                    "警告！这家夜宵店有毒！{feature}，太好吃了，我已经吃了五串了！再这样下去我要变成夜宵精了！老板，你赔我的减肥计划！\n\n长沙人吃夜宵的快乐，你想象不到！",
+                    "听说这家夜宵店的老板是个狠人，{feature}，东西做得太绝了！我本来只想吃一点，结果吃了一堆！现在肚子圆滚滚的，但是一点都不后悔！\n\n来长沙不吃这家夜宵，等于白来！",
+                    "救命！这家夜宵店让我爱上了熬夜！因为熬夜可以吃夜宵！{feature}，太好吃了，每天晚上都迫不及待想来！老板，能不能开个分店到我家楼下？"
+                ]
+            }
+        };
+
+        const tags = {
+            米粉: ["#长沙米粉", "#嗦粉", "#长沙美食", "#坡子街", "#太平街", "#长沙探店", "#湖南美食", "#吃货", "#早餐", "#解放西"],
+            茶饮: ["#长沙奶茶", "#长沙茶饮", "#长沙美食", "#茶颜悦色", "#长沙探店", "#湖南美食", "#吃货", "#下午茶", "#解放西", "#太平街"],
+            小吃: ["#长沙小吃", "#长沙美食", "#太平街", "#坡子街", "#长沙探店", "#湖南美食", "#吃货", "#臭豆腐", "#糖油粑粑", "#解放西"],
+            正餐: ["#长沙湘菜", "#长沙美食", "#长沙探店", "#湖南美食", "#吃货", "#聚餐", "#坡子街", "#解放西", "#美食推荐", "#长沙打卡"],
+            夜宵: ["#长沙夜宵", "#长沙美食", "#解放西", "#长沙探店", "#湖南美食", "#吃货", "#烧烤", "#小龙虾", "#深夜食堂", "#长沙夜生活"]
+        };
+
+        const poiTemplates = {
+            米粉: ["{name}米粉铺", "{name}粉馆", "{name}正宗米粉", "{name}老字号米粉"],
+            茶饮: ["{name}茶铺", "{name}茶饮", "{name}奶茶店", "{name}茶空间"],
+            小吃: ["{name}小吃店", "{name}特色小吃", "{name}老字号小吃", "{name}地道小吃"],
+            正餐: ["{name}湘菜馆", "{name}家菜馆", "{name}私房菜", "{name}地道湘菜"],
+            夜宵: ["{name}夜宵城", "{name}烧烤店", "{name}龙虾馆", "{name}深夜食堂"]
+        };
+
+        function generateCopy() {
+            const category = document.getElementById('category').value;
+            const feature = document.getElementById('feature').value || '味道正宗';
+            const style = document.getElementById('style').value;
+            const outputSection = document.getElementById('outputSection');
+            const resultContainer = document.getElementById('resultContainer');
+
+            const styleTemplates = templates[category][style];
+            const categoryTags = tags[category];
+            const poiOptions = poiTemplates[category];
+
+            resultContainer.innerHTML = '';
+
+            for (let i = 0; i < 3; i++) {
+                const template = styleTemplates[i];
+                const content = template.replace('{feature}', feature);
+                
+                const shuffledTags = [...categoryTags].sort(() => Math.random() - 0.5);
+                const selectedTags = shuffledTags.slice(0, 5);
+                
+                const poiName = poiOptions[Math.floor(Math.random() * poiOptions.length)];
+                
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <h3>文案 ${i + 1} <button class="copy-btn" onclick="copyContent(this)">复制</button></h3>
+                    <div class="content">${content}</div>
+                    <div class="tags">
+                        ${selectedTags.map(tag => `<span>${tag}</span>`).join('')}
+                    </div>
+                    <div class="poi">
+                        <span>📍 POI命名建议：</span>
+                        <p>${poiName.replace('{name}', '长沙')}</p>
+                    </div>
+                `;
+                resultContainer.appendChild(card);
+            }
+
+            outputSection.style.display = 'block';
+            outputSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyContent(btn) {
+            const card = btn.closest('.result-card');
+            const content = card.querySelector('.content').innerText;
+            const tags = card.querySelectorAll('.tags span');
+            const poi = card.querySelector('.poi p').innerText;
+            
+            const fullText = content + '\n\n' + Array.from(tags).map(t => t.innerText).join(' ') + '\n\n' + poi;
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                btn.innerText = '已复制';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = '复制';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
